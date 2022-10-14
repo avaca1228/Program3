@@ -8,6 +8,17 @@
 
 std::vector<specialChar> = { '@','!','#','^','&','*','$'};
 
+int userIn() {
+	cout << "Enter password: ";
+	cin >> password;
+	CheckRules()
+}
+
+int CheckRules() {
+	if (password.length() != 8) return rule_msg_1;
+	if (password[i] != )
+}
+
 int main()
 {
 	/****************************
@@ -24,17 +35,6 @@ int main()
 	const string rule_msg_5 = "The selected password must have at least one of special characters: [@,!,#,^,&,*,$]";
 	const string rule_msg_6 = "The selected password has been leaked.";
 	const string rule_msg_7 = "The selected password cannot contain a dictionary word.";
-
-	int userIn() {
-		cout << "Enter password: ";
-			cin >> password;
-		CheckRules()
-	}
-
-	int CheckRules() {
-		if (password.length() != 8) return rule_msg_1;
-		if (password[i] != )
-	}
 
 
 	/****
