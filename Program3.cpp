@@ -5,18 +5,24 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+using namespace std;
 
-std::vector<specialChar> = { '@','!','#','^','&','*','$'};
+const string rule_msg_1 = "The selected password must be at least eight characters long.";
+const string rule_msg_2 = "The selected password must have at least one uppercase letter.";
+const string rule_msg_3 = "The selected password must have at least one lowercase letter.";
+const string rule_msg_4 = "The selected password must have at least one digit.";
+const string rule_msg_5 = "The selected password must have at least one of special characters: [@,!,#,^,&,*,$]";
+const string rule_msg_6 = "The selected password has been leaked.";
+const string rule_msg_7 = "The selected password cannot contain a dictionary word.";
 
-int userIn() {
-	cout << "Enter password: ";
-	cin >> password;
-	CheckRules()
-}
+char specialChar[7] = {'@','!','#','^','&','*','$'};
+string passWord;	
 
-int CheckRules() {
-	if (password.length() != 8) return rule_msg_1;
-	if (password[i] != )
+void CheckRules(string passWord) {
+	if (passWord.length() < 8) cout << rule_msg_1;
+	if (passWord != passWord.isupper(i)) cout << rule_msg_2;
+	if (passWord != passWord.islower(i)) return rule_msg_3;
+	if (passWord != passWord
 }
 
 int main()
@@ -27,21 +33,14 @@ int main()
 	 *
 	 * *** **********************/
 
-
-	const string rule_msg_1 = "The selected password must be at least eight characters long.";
-	const string rule_msg_2 = "The selected password must have at least one uppercase letter.";
-	const string rule_msg_3 = "The selected password must have at least one lowercase letter.";
-	const string rule_msg_4 = "The selected password must have at least one digit.";
-	const string rule_msg_5 = "The selected password must have at least one of special characters: [@,!,#,^,&,*,$]";
-	const string rule_msg_6 = "The selected password has been leaked.";
-	const string rule_msg_7 = "The selected password cannot contain a dictionary word.";
-
+	cout << "Enter password: ";
+	cin >> passWord;
+	CheckRules();
 
 	/****
 	 * Runs the main part of the program
 	 ****/
 	int run(string leaked_password_file, string english_word_file);
-
 
 	int main() {
 		/** Change the address of the files appropriatly based on your local machine.
