@@ -5,6 +5,8 @@
 #include <string>
 #include <algorithm>
 #include <cctype>
+#include <vector>
+#include <cctype>
 
 using namespace std;
 
@@ -16,7 +18,6 @@ const string rule_msg_5 = "The selected password must have at least one of speci
 const string rule_msg_6 = "The selected password has been leaked.";
 const string rule_msg_7 = "The selected password cannot contain a dictionary word.";
 
-string passWord;
 char specialChar[7] = {'@','!','#','^','&','*','$'};
 char digits[9] = {'1','2','3','4','5','6','7','8','9'};
 int UpperCount = 0;
@@ -25,55 +26,58 @@ int specCount = 0;
 int digCount = 0;
 bool PassReject = false;
 	
-
-void binarySearch() {
-
-}
-void CheckRulesThru5(string passWord) {	
-	if (passWord.length() < 8) {
-		cout << rule_msg_1 << endl;
-		PassReject = true;
-	for (int i = 0; i < passWord.size(); i++) {
-		if (isupper(passWord[i]))
-			UpperCount++;
-		if (UpperCount == 0) cout << rule_msg_2 << endl;
-		PassReject = true
+void passwordFiles(string passwordFile, vector <string> &searchPw) {
+	string newLine;
+	ifstream passwordStream;
+	passwordStream.open(passwordFile, ios::in);
+	while (passwordStream >> newLine) {
+		searchPw.push_back(newLine);
 	}
-	for (int j = 0; j < passWord.size(); j++) {
-		if (islower(passWord[j]))
-			LowerCount++;
-		if (LowerCount == 0) {
-			cout << rule_msg_3;
-			PassReject = true
-		}
-	}
-	for (int l = 0; l < passWord.size(); l++) {
-		for (int m = 0; m < 9; m++) {
-			if (passWord[l] == digits[m]) {
-				digCount++;
-			}
-			if (digCount < 0) {
-				cout << rule_msg_4 << endl;
-				PassReject = true
-			}
-		}
-	}
-	for (int h = 0; h <passWord.size(); h++) {
-		for (int k = 0; k < 7; k++) {
-			if (passWord[h] == specialChar[k])
-				specCount++;
-		}
-		if (specCount < 1) {
-			cout << rule_msg_5 << endl;
-			PassReject = true
-		}
-	}
-	if (PassReject == true) cout << "Password rejected!";
+	passwordStream.close();
 }
 
-void CheckRules5and6(string passWord) {
-
+int RemoveSpec(string passWord) {
+	string ReplChar = "";
+	for (int n = 0; n < passWord.size(); n++) {
+		if (isalnum(passWord[n])) {
+			ReplChar.push_back(passWord[n]);
+		}
 	}
+	return ReplChar;
+}
+
+string CompareWords(string passWord) {
+	passWord = islower(passWord);
+	passWord = RemoveSpec(passWord);
+	string compareResult;
+	for (int b = 0; b < passWord.size(); b++) {
+		if (isalpha(passWord[b])) {
+			compareResult.push_back(passWord[b]);
+		}
+	}
+	return compareResult;
+}
+
+int binarySearch(vector<string> &vectorSearch, string searchPass) {
+	int low = 0;
+	int mid;
+	int high = vectorSearch.size() - 1;
+	searchPass = islower(searchPass);
+	searchPass = RemoveSpec(searchPass);
+	while (low <= high) {
+		int mid = (high + low) / 2;
+		if (RemoveSpec(vectorSearch.at(mid)) == searchPass) {
+			return mid;
+		}
+		if (RemoveSpec(vectorSearch.at(mid)) < searchPass) {
+			low = mid + 1;
+		}
+		else {
+			high = mid - 1;
+		}
+	}
+	return -1;
+}
 
 int main() 
 {
@@ -83,16 +87,93 @@ int main()
 	 *
 	 * *** **********************/
 
-	cout << "Enter password: ";
-	cin >> passWord;
-	CheckRulesThru5(passWord);
-	CheckRules5and6(passWord);
-
 	/****
 	 * Runs the main part of the program
 	 ****/
-	int run(string leaked_password_file, string english_word_file);
 
+	int run(string leaked_password_file, string english_word_file);
+	int PassReject = false;
+	int ruleSix = 0;
+	int ruleSeven = 0;
+
+	vector<string> leakedPassword;
+	vector<string> englishWords;
+
+	string passWord;
+	cout << "Enter password: ";
+	getline(cin, passWord);
+
+	if (passWord.size() < 8) {
+		cout << rule_msg_1 << endl;
+		PassReject = true;
+	}
+	for (int i = 0; i < passWord.size(); i++) {
+		if (isupper(passWord[i]))
+			UpperCount++;
+		if (UpperCount == 0) cout << rule_msg_2 << endl;
+		PassReject = true;
+	}
+	for (int j = 0; j < passWord.size(); j++) {
+		if (islower(passWord[j]))
+			LowerCount++;
+		if (LowerCount == 0) {
+			cout << rule_msg_3;
+			PassReject = true;
+		}
+	}
+	for (int l = 0; l < passWord.size(); l++) {
+		for (int m = 0; m < 9; m++) {
+			if (passWord[l] == digits[m]) {
+				digCount++;
+			}
+			if (digCount < 0) {
+				cout << rule_msg_4 << endl;
+				PassReject = true;
+			}
+		}
+	}
+	for (int h = 0; h < passWord.size(); h++) {
+		for (int k = 0; k < 7; k++) {
+			if (passWord[h] == specialChar[k])
+				specCount++;
+		}
+		if (specCount < 1) {
+			cout << rule_msg_5 << endl;
+			PassReject = true;
+		}
+	}
+	if (PassReject == true) { cout << "Password rejected!"; }
+
+	if (PassReject == false) {
+		passwordFiles(leaked_password_file, leakedPassword);
+		if (binarySearch(leakedPassword, passWord) > 0) {
+		}
+		else { ruleSix++; }
+
+		if (ruleSix <= 0) {
+			cout << rule_msg_6 << endl;
+			cout << "Password rejected!";
+		}
+	}
+	
+	if (ruleSix == 1) {
+		passWord = englishCompare(passWord);
+		passwordFiles(english_word_file, englishWords);
+		for (int x = 0; x < englishWords.size(); x++) {
+			if (englishWords[x] == passWord) {
+				ruleSeven++;
+			}
+		}
+	}
+	if (ruleSeven > 0) {
+		cout << rule_msg_7 << endl;
+		cout << "Password rejected!";
+	}
+	if (PassReject == false && ruleSix == 1 && ruleSeven == 0) {
+		cout << "Password accepted!" << endl;
+	}
+	return 0;
+}
 	int main() {
 		/** Change the address of the files appropriatly based on your local machine. 
 		 * This main function will be replaced during testing. Do not add any line of code to the main function
