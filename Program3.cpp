@@ -23,6 +23,8 @@ int UpperCount = 0;
 int LowerCount = 0;
 int specCount = 0;
 int digCount = 0;
+bool PassReject = false;
+	
 
 void binarySearch() {
 
@@ -30,19 +32,19 @@ void binarySearch() {
 void CheckRulesThru5(string passWord) {	
 	if (passWord.length() < 8) {
 		cout << rule_msg_1 << endl;
-		cout << "Password rejected!";
+		PassReject = true;
 	for (int i = 0; i < passWord.size(); i++) {
 		if (isupper(passWord[i]))
 			UpperCount++;
 		if (UpperCount == 0) cout << rule_msg_2 << endl;
-		cout << "Password rejected!";
+		PassReject = true
 	}
 	for (int j = 0; j < passWord.size(); j++) {
 		if (islower(passWord[j]))
 			LowerCount++;
 		if (LowerCount == 0) {
 			cout << rule_msg_3;
-			cout << "Password rejected!";
+			PassReject = true
 		}
 	}
 	for (int l = 0; l < passWord.size(); l++) {
@@ -52,7 +54,7 @@ void CheckRulesThru5(string passWord) {
 			}
 			if (digCount < 0) {
 				cout << rule_msg_4 << endl;
-				cout << "Password rejected!";
+				PassReject = true
 			}
 		}
 	}
@@ -63,9 +65,10 @@ void CheckRulesThru5(string passWord) {
 		}
 		if (specCount < 1) {
 			cout << rule_msg_5 << endl;
-			cout << "Password rejected!";
+			PassReject = true
 		}
 	}
+	if (PassReject == true) cout << "Password rejected!";
 }
 
 void CheckRules5and6(string passWord) {
