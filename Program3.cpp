@@ -108,32 +108,35 @@ int binarySearch(vector<string> &vectorSearch, string searchPass) {
 		}
 		for (int i = 0; i < passWord.size(); i++) {
 			if (isupper(passWord[i]))
-				UpperCount++;
-			if (UpperCount == 0) cout << rule_msg_2 << endl;
+				UpperCount++; }
+			if (UpperCount == 0) {
+			cout << rule_msg_2 << endl;
 			PassReject = true;
 		}
+
 		for (int i = 0; i < passWord.size(); i++) {
-			if (islower(passWord[i])) LowerCount++;
+			if (islower(passWord[i])) LowerCount++; }
 			if (LowerCount == 0) {
 				cout << rule_msg_3;
 				PassReject = true;
 			}
-		}
+		
 		for (int i = 0; i < passWord.size(); i++) {
 			for (int j = 0; j < 9; j++) {
 				if (passWord[i] == digits[j]) {
 					digCount++;
 				}
-				if (digCount < 0) {
-					cout << rule_msg_4 << endl;
-					PassReject = true;
-				}
 			}
+		}
+		if (digCount == 0) {
+			cout << rule_msg_4 << endl;
+			PassReject = true;
 		}
 		for (int i = 0; i < passWord.size(); i++) {
 			for (int j = 0; j < 7; j++) {
-				if (passWord[i] == specialChar[j]) 	specCount++; }
-			if (specCount < 1) {
+				if (passWord[i] == specialChar[j]) 	specCount++; 
+			}
+			if (specCount < 0) {
 				cout << rule_msg_5 << endl;
 				PassReject = true;
 				break;
