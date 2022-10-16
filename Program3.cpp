@@ -71,7 +71,7 @@ string CompareWords(string passWord) {
 
 int binarySearch(vector<string> &vectorSearch, string searchPass) {
 	int low = 0;
-	int mid;
+	int mid = 0;
 	int high = vectorSearch.size() - 1;
 	searchPass = lowerPass(searchPass);
 	searchPass = RemoveSpec(searchPass);
@@ -81,6 +81,25 @@ int binarySearch(vector<string> &vectorSearch, string searchPass) {
 			return mid;
 		}
 		if (RemoveSpec(vectorSearch.at(mid)) < searchPass) {
+			low = mid + 1;
+		}
+		else {
+			high = mid - 1;
+		}
+	}
+	return -1;
+}
+
+int LeakCheck(vector<string>& vectorSearch, string searchPass) {
+	int low = 0;
+	int mid = 0;
+	int high = vectorSearch.size() - 1;
+	while (low <= high) {
+		int mid = (high + low) / 2;
+		if (vectorSearch.at(mid) == searchPass) {
+			return mid;
+		}
+		if (vectorSearch.at(mid) < searchPass) {
 			low = mid + 1;
 		}
 		else {
@@ -143,11 +162,11 @@ int binarySearch(vector<string> &vectorSearch, string searchPass) {
 			}
 		}
 
-		if (PassReject == true) { cout << "Password rejected!"; }
+		if (PassReject == true) cout << "Password rejected!";
 
 		if (PassReject == false) {
 			passwordFiles(leaked_password_file, leakedPassword);
-			if (binarySearch(leakedPassword, passWord) > 0) {
+			if (LeakCheck(leakedPassword, passWord) < 0) {
 			}
 			else { ruleSix++; }
 
