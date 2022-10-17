@@ -61,9 +61,9 @@ string CompareWords(string passWord) {
 	passWord = lowerPass(passWord);
 	passWord = RemoveSpec(passWord);
 	string compareResult;
-	for (int b = 0; b < passWord.size(); b++) {
-		if (isalpha(passWord[b])) {
-			compareResult.push_back(passWord[b]);
+	for (int i = 0; i < passWord.size(); i++) {
+		if (isalpha(passWord[i])) {
+			compareResult.push_back(passWord[i]);
 		}
 	}
 	return compareResult;
@@ -111,8 +111,6 @@ int LeakCheck(vector<string>& vectorSearch, string searchPass) {
 
 	int run(string leaked_password_file, string english_word_file) {
 		int PassReject = false;
-		int ruleSix = 0;
-		int ruleSeven = 0;
 
 		vector<string> leakedPassword;
 		vector<string> englishWords;
@@ -161,35 +159,34 @@ int LeakCheck(vector<string>& vectorSearch, string searchPass) {
 				break;
 			}
 		}
-
 		if (PassReject == true) cout << "Password rejected!";
-
-		if (PassReject == false) {
+		 
+		if (PassReject == false) { // If the password hasn't been rejected yet, check for rule 6 (leaks)
 			passwordFiles(leaked_password_file, leakedPassword);
-			if (LeakCheck(leakedPassword, passWord) < 0) {
+			if (binarySearch(leakedPassword, passWord) > 0) {
 			}
-			else { ruleSix++; }
-
-			if (ruleSix <= 0) {
+			else { PassReject = true; 
+			}
+			if (PassReject == true) {
 				cout << rule_msg_6 << endl;
 				cout << "Password rejected!";
 			}
 		}
 
-		if (ruleSix == 1) {
+		if (PassReject == false) { // If the password hasn't been rejected yet, check for rule 7 (dictionary words)
 			passWord = CompareWords(passWord);
 			passwordFiles(english_word_file, englishWords);
 			for (int x = 0; x < englishWords.size(); x++) {
 				if (englishWords[x] == passWord) {
-					ruleSeven++;
+					PassReject = true;
 				}
 			}
+			if (PassReject == true) {
+				cout << rule_msg_7 << endl;
+				cout << "Password rejected!";
+			}
 		}
-		if (ruleSeven > 0) {
-			cout << rule_msg_7 << endl;
-			cout << "Password rejected!";
-		}
-		if (PassReject == false && ruleSix == 1 && ruleSeven == 0) {
+		if (PassReject == false) {
 			cout << "Password accepted!" << endl;
 		}
 		return 0;
